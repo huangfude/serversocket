@@ -1,0 +1,29 @@
+############################################################# 
+# Makefile for shared library.
+#############################################################
+#set your own environment option
+CC = gcc
+CC_FLAG = -D_NOMNG -D_FILELINE
+
+#set your inc and lib
+INC = 
+LIB = -lpthread -L./ -lsvrtool
+
+#make target lib and relevant obj 
+PRG = libsvrtool.so
+OBJ = server.o
+
+#all target
+all:$(PRG)
+
+$(PRG):$(OBJ)
+	$(CC) -shared -o $@ $(OBJ) $(LIB)
+
+.SUFFIXES: .c .o
+.cpp.o:
+	$(CC) $(CC_FLAG) $(INC) -c $*.c -o $*.o
+
+.PRONY:clean
+clean:
+	@echo "Removing linked and compiled files......;
+	rm -f $(OBJ) $(PRG)

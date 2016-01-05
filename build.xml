@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE project>
+
+<project name="serversocket" default="usage" basedir=".">
+      <property name="project-name" value="serversocket"/>
+
+      <property name="build" value="build"/>
+      <property name="lib" value="lib"/>
+      <property name="src" value="src"/>
+      <property name="build.classes"      value="${build}/classes" />
+      <property file="build.properties"/>
+ 
+
+      <property name="jar.dir"     value="jar"/>
+      <property name="jar-file-name"      value="${project-name}" />
+
+      <path id="Third-Part Lib">
+            <fileset dir="${lib}">
+                  <include name="**/*.jar" />
+            </fileset>
+      </path>
+ 
+      <target name="usage" description="Build file usage info (default task)">
+            <echo message=" " />
+            <echo message="${project-name} " />
+            <echo message="-------------------------------------------------------" />
+            <echo message="Available Targets:" />
+            <echo message=" ***" />
+            <echo message=" Compiling:" />
+            <echo message="  compile  - Compiles the source code" />
+            <echo message=" ***" />
+            <echo message=" Cleaning up:" />
+            <echo message="  clean - Delete class files" />
+            <echo message=" ***" />
+            <echo message=" JAR:" />
+            <echo message="  jar  - Generate an .jar for source code" />
+            <echo message=" ***" />
+            <echo message=" Executing:" />
+            <echo message="  run  - Execute the  Java client !" />
+            <echo message=" ***" />
+            <echo message="-------------------------------------------------------" />
+      </target>
+
+      <target name="prepare" >
+            <mkdir dir="${build.classes}" />
+            <mkdir dir="${jar.dir}" />
+      </target>
+
+      <target name="clean" >
+            <delete dir="${build}" />
+            <delete dir="${jar.dir}" />
+      </target>
+ 
+      <target name="compile" depends="clean,prepare">
+      <echo message="Compiling the source code!"/>
+            <javac
+                  srcdir="${src}"
+                  destdir="${build.classes}"
+                  deprecation="true"
+                  failonerror="true" debug="true"
+                  >
+                  <classpath refid="Third-Part Lib"/> 
+            </javac>
+      </target>
+
+
+      <!-- <target name="run" description="Receive email! "  depends="compile"> -->
+      <!-- note：classpath="${build.classes}" -->
+      <!--
+      <target name="run" description="Receive email! ">
+            <java classname="POP3MailReceiver" classpath="${build.classes}" fork="true" maxmemory="256m">
+                  <classpath refid="Third-Part Lib"/> 
+            </java>
+      </target>
+      -->
+
+      
+      <target name="run"  description="Server Socket! ">
+            <java jar="${jar.dir}/${jar-file-name}.jar" fork="true" maxmemory="256m"/>
+      </target>
+
+      <target name="jar" depends="compile">
+            <jar destfile="${jar.dir}/${jar-file-name}.jar" basedir="${build.classes}">
+                  <manifest>
+                        <!-- here fix -->
+                        <attribute name="Main-Class" value="ServerExecutor"/>
+			<!--
+                        <attribute name="Class-Path" value="../${lib}/commons-email-1.0.jar ../${lib}/mail.jar ../${lib}/activation.jar"/>
+			-->
+                  </manifest>
+            </jar>
+      </target>
+</project>
+
